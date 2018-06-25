@@ -1,2 +1,4 @@
 .idea/
+variables.env
 !.gitignore
+!variables.env.example
