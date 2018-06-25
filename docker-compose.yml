@@ -1,0 +1,46 @@
+version: "2.1"
+
+services:
+  nginx:
+    restart: always
+    build: ./nginx
+    depends_on:
+      - php
+    ports:
+      - "81:80"
+    volumes:
+      - ./www:/www
+      - ./log/nginx:/var/log/nginx
+    networks:
+      - web-nginx
+      - web-php
+
+  php:
+    restart: always
+    build: ./php
+    depends_on:
+      - mysql
+    volumes:
+      - ./www:/www
+      - ./log/php:/var/log/php
+    networks:
+      - web-php
+      - web-mysql
+
+  mysql:
+    restart: always
+    build: ./mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/mysql:/var/lib/mysql
+      - ./log/mysql:/var/log/mysql
+    networks:
+      - web-mysql
+    env_file:
+      - variables.env
+
+networks:
+  web-nginx:
+  web-php:
+  web-mysql:
